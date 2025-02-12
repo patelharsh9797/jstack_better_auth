@@ -5,6 +5,7 @@ import { useState } from "react";
 import { client } from "@/lib/client";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 export const RecentPost = () => {
   const [name, setName] = useState<string>("");
@@ -26,6 +27,9 @@ export const RecentPost = () => {
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ["get-recent-post"] });
       setName("");
+    },
+    onError: (error) => {
+      toast.error(error.message);
     },
   });
 

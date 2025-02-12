@@ -1,7 +1,12 @@
+import SignoutButton from "@/components/auth/signout-button";
 import { RecentPost } from "@/components/post";
 import { cn } from "@/lib/utils";
+import { getServerSession } from "@/server/auth";
+import Link from "next/link";
 
 export default async function Home() {
+  const session = await getServerSession();
+
   return (
     <main className="flex min-h-screen bg-gradient-to-br from-zinc-950 via-zinc-900 to-zinc-950 flex-col items-center justify-center relative isolate">
       <div className="absolute inset-0 -z-10 opacity-50 mix-blend-soft-light bg-[url('/noise.svg')] [mask-image:radial-gradient(ellipse_at_center,black,transparent)]" />
@@ -24,6 +29,26 @@ export default async function Home() {
           </span>
         </p>
 
+        <div className="flex flex-col items-center gap-2">
+          <div className="flex flex-col items-center justify-center gap-4">
+            <p className="text-center text-2xl text-white">
+              {session && <span>Logged in as {session.user?.name}</span>}
+            </p>
+
+            {!session ? (
+              <Link
+                href={session ? "/signout" : "/signin"}
+                className="rounded-full bg-white/10 px-10 py-3 font-semibold no-underline transition hover:bg-white/20"
+              >
+                {session ? "Sign out" : "Sign in"}
+              </Link>
+            ) : (
+              <SignoutButton />
+            )}
+          </div>
+        </div>
+
+        {/* {session?.user && <RecentPost />} */}
         <RecentPost />
       </div>
     </main>

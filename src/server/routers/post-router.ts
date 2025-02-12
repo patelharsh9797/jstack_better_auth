@@ -1,8 +1,8 @@
 import { posts } from "@/server/db/schema";
-import { desc } from "drizzle-orm";
+import { desc, eq } from "drizzle-orm";
 import { z } from "zod";
 
-import { j, publicProcedure } from "../jstack";
+import { j, privateProcedure, publicProcedure } from "../jstack";
 
 export const postRouter = j.router({
   recent: publicProcedure.query(async ({ c, ctx }) => {
@@ -17,13 +17,15 @@ export const postRouter = j.router({
     return c.superjson(recentPost ?? null);
   }),
 
-  create: publicProcedure
+  create: privateProcedure
     .input(z.object({ name: z.string().min(1) }))
     .mutation(async ({ ctx, c, input }) => {
       const { name } = input;
-      const { db } = ctx;
+      const { db, user } = ctx;
 
-      const post = await db.insert(posts).values({ name, createdById: "1" });
+      const post = await db
+        .insert(posts)
+        .values({ name, createdById: user.id });
 
       return c.superjson(post);
     }),

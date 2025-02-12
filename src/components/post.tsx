@@ -1,56 +1,54 @@
-"use client"
+"use client";
 
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
-import { useState } from "react"
-import { client } from "@/lib/client"
+import { useState } from "react";
+
+import { client } from "@/lib/client";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
 
 export const RecentPost = () => {
-  const [name, setName] = useState<string>("")
-  const queryClient = useQueryClient()
+  const [name, setName] = useState<string>("");
+  const queryClient = useQueryClient();
 
   const { data: recentPost, isPending: isLoadingPosts } = useQuery({
     queryKey: ["get-recent-post"],
     queryFn: async () => {
-      const res = await client.post.recent.$get()
-      return await res.json()
+      const res = await client.post.recent.$get();
+      return await res.json();
     },
-  })
+  });
 
   const { mutate: createPost, isPending } = useMutation({
     mutationFn: async ({ name }: { name: string }) => {
-      const res = await client.post.create.$post({ name })
-      return await res.json()
+      const res = await client.post.create.$post({ name });
+      return await res.json();
     },
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ["get-recent-post"] })
-      setName("")
+      await queryClient.invalidateQueries({ queryKey: ["get-recent-post"] });
+      setName("");
     },
-  })
+  });
 
   return (
-    <div className="w-full max-w-sm backdrop-blur-lg bg-black/15 px-8 py-6 rounded-md text-zinc-100/75 space-y-2">
+    <div className="max-w-sm backdrop-blur-lg w-full bg-black/15 px-8 py-6 rounded-md text-zinc-100/75 space-y-2">
       {isLoadingPosts ? (
-        <p className="text-[#ececf399] text-base/6">
-          Loading posts...
-        </p>
+        <p className="text-[#ececf399] text-base/6">Loading posts...</p>
       ) : recentPost ? (
         <p className="text-[#ececf399] text-base/6">
           Your recent post: "{recentPost.name}"
         </p>
       ) : (
-        <p className="text-[#ececf399] text-base/6">
-          You have no posts yet.
-        </p>
+        <p className="text-[#ececf399] text-base/6">You have no posts yet.</p>
       )}
       <form
         onSubmit={(e) => {
-          e.preventDefault()
-          createPost({ name })
+          e.preventDefault();
+          createPost({ name });
         }}
         onKeyDown={(e) => {
           if (e.key === "Enter" && !e.shiftKey) {
-            e.preventDefault()
-            createPost({ name })
+            e.preventDefault();
+            createPost({ name });
           }
         }}
         className="flex flex-col gap-4"
@@ -71,5 +69,5 @@ export const RecentPost = () => {
         </button>
       </form>
     </div>
-  )
-}
+  );
+};

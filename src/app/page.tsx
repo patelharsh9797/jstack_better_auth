@@ -1,5 +1,5 @@
-import { cn } from "@/lib/utils"
-import { RecentPost } from "@/components/post"
+import { RecentPost } from "@/components/post";
+import { cn } from "@/lib/utils";
 
 export default async function Home() {
   return (
@@ -11,7 +11,7 @@ export default async function Home() {
             "inline-flex tracking-tight flex-col gap-1 transition text-center",
             "font-display text-4xl sm:text-5xl md:text-6xl font-semibold leading-none lg:text-[4rem]",
             "bg-gradient-to-r from-20% bg-clip-text text-transparent",
-            "from-white to-gray-50"
+            "from-white to-gray-50",
           )}
         >
           <span>JStack</span>
@@ -27,5 +27,5 @@ export default async function Home() {
         <RecentPost />
       </div>
     </main>
-  )
+  );
 }

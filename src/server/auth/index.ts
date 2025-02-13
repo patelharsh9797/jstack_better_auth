@@ -9,7 +9,7 @@ import {
 import { db } from "@/server/db";
 import { betterAuth, type BetterAuthOptions } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
-import { admin, openAPI } from "better-auth/plugins";
+import { openAPI } from "better-auth/plugins";
 import { headers } from "next/headers";
 
 export const auth = betterAuth({
@@ -39,7 +39,7 @@ export const auth = betterAuth({
     // },
     changeEmail: {
       enabled: true,
-      sendChangeEmailVerification: async ({ newEmail, url }, _request) => {
+      sendChangeEmailVerification: async ({ newEmail, url }) => {
         const { error } = await sendChangeEmailVerification({
           email: newEmail,
           verificationUrl: url,

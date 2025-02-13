@@ -17,7 +17,7 @@ export const j = jstack.init<Env>();
  * For deployment to Cloudflare Workers
  * @see https://developers.cloudflare.com/workers/tutorials/postgres/
  */
-const databaseMiddleware = j.middleware(async ({ c, next }) => {
+const databaseMiddleware = j.middleware(async ({ next }) => {
   return await next({ db });
 });
 

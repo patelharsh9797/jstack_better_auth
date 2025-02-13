@@ -24,7 +24,6 @@ import { signUpSchema, type SignUpSchemaType } from "@/lib/zod";
 import { authClient } from "@/server/auth/client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
@@ -33,7 +32,6 @@ export function SignupForm({
   ...props
 }: React.ComponentPropsWithoutRef<"div">) {
   const [pending, setPending] = useState(false);
-  const router = useRouter();
   const form = useForm<SignUpSchemaType>({
     resolver: zodResolver(signUpSchema),
     defaultValues: {

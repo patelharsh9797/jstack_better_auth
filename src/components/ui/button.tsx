@@ -72,6 +72,8 @@ function LoadingButton({
   return (
     <Button
       onClick={onClick}
+      variant={variant}
+      size={size}
       className={cn("w-full", className)}
       disabled={pending}
       {...props}

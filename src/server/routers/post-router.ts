@@ -17,8 +17,22 @@ export const postRouter = j.router({
     return c.superjson(recentPost ?? null);
   }),
 
+  all: privateProcedure.query(async ({ c, ctx }) => {
+    const { db, user } = ctx;
+
+    const recentPosts = await db.query.posts.findMany({
+      // orderBy: desc(posts.createdAt),
+      where: (model, { eq }) => eq(model.createdById, user.id),
+      orderBy: (post, { desc }) => [desc(post.createdAt)],
+    });
+
+    return c.superjson(recentPosts);
+  }),
+
   create: privateProcedure
-    .input(z.object({ name: z.string().min(1) }))
+    .input(
+      z.object({ name: z.string().min(1, { message: "Name is required" }) }),
+    )
     .mutation(async ({ ctx, c, input }) => {
       const { name } = input;
       const { db, user } = ctx;

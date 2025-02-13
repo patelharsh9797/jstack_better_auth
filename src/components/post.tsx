@@ -4,7 +4,6 @@ import { useState } from "react";
 
 import { client } from "@/lib/client";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
 export const RecentPost = () => {
@@ -19,13 +18,32 @@ export const RecentPost = () => {
     },
   });
 
+  const {
+    data: allPost,
+    isPending: isLoadingAllPosts,
+    isError: isErrorAllPosts,
+    error: errorAllPosts,
+  } = useQuery({
+    queryKey: ["get-all-post"],
+    queryFn: async () => {
+      const res = await client.post.all.$get();
+      return await res.json();
+    },
+    refetchOnWindowFocus: false,
+  });
+
   const { mutate: createPost, isPending } = useMutation({
     mutationFn: async ({ name }: { name: string }) => {
       const res = await client.post.create.$post({ name });
       return await res.json();
     },
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ["get-recent-post"] });
+      await queryClient.invalidateQueries({
+        queryKey: ["get-recent-post"],
+      });
+      await queryClient.invalidateQueries({
+        queryKey: ["get-all-post"],
+      });
       setName("");
     },
     onError: (error) => {
@@ -72,6 +90,22 @@ export const RecentPost = () => {
           {isPending ? "Creating..." : "Create Post"}
         </button>
       </form>
+
+      <div className="mt-4">
+        {isLoadingAllPosts ? (
+          <p className="text-[#ececf399] text-base/6">Loading posts...</p>
+        ) : allPost?.length ? (
+          <ul className="text-[#ececf399] text-base/6 list-disc pl-4">
+            {allPost.map((post) => (
+              <li key={post.id}>{post.name}</li>
+            ))}
+          </ul>
+        ) : (
+          <p className="text-[#ececf399] text-base/6">
+            {isErrorAllPosts ? errorAllPosts.message : "You have no posts yet."}
+          </p>
+        )}
+      </div>
     </div>
   );
 };

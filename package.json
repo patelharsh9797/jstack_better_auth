@@ -11,6 +11,7 @@
     "dev": "next dev",
     "email": "email dev --dir src/components/email-templates",
     "lint": "next lint",
+    "typecheck": "tsc --noEmit",
     "start": "next start"
   },
   "dependencies": {

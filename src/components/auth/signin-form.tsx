@@ -22,7 +22,6 @@ import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { signInSchema, type SignInSchemaType } from "@/lib/zod";
 import { authClient } from "@/server/auth/client";
-import { type ErrorContext } from "@better-fetch/fetch";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Github } from "lucide-react";
 import Link from "next/link";
@@ -59,7 +58,7 @@ export function SigninForm({
           router.refresh();
           // router.push("/");
         },
-        onError: (ctx: ErrorContext) => {
+        onError: (ctx) => {
           toast.error("Something went wrong", {
             description: ctx.error.message ?? "Something went wrong.",
           });
@@ -83,7 +82,7 @@ export function SigninForm({
         onSuccess: async () => {
           router.push("/");
         },
-        onError: (ctx: ErrorContext) => {
+        onError: (ctx) => {
           toast.error((ctx.error?.code as string) ?? "Something went wrong", {
             description: ctx.error.message ?? "Something went wrong.",
           });

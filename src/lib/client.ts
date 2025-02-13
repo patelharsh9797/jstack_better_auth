@@ -6,7 +6,7 @@ import { createClient } from "jstack";
  * @see https://jstack.app/docs/backend/api-client
  */
 export const client = createClient<AppRouter>({
-  baseUrl: `${getBaseUrl()}/api`,
+  baseUrl: getBaseUrl(),
 });
 
 function getBaseUrl() {
@@ -14,7 +14,6 @@ function getBaseUrl() {
   if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`;
   if (process.env.NETLIFY_URL) return `https://${process.env.NETLIFY_URL}`;
 
-  if (process.env.NODE_ENV === "production") return process.env.BASE_URL;
-
-  return `http://localhost:3000`;
+  const url = `${process.env.NEXT_PUBLIC_BASE_URL ?? "http://localhost:3000"}/api`;
+  return url;
 }

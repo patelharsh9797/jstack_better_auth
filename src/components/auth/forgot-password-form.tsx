@@ -22,7 +22,6 @@ import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { forgotPasswordSchema, type ForgotPasswordSchemaType } from "@/lib/zod";
 import { authClient } from "@/server/auth/client";
-import { type ErrorContext } from "@better-fetch/fetch";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -56,7 +55,7 @@ export function ForgotPasswordForm({
               "If an account exists, you will receive an email to reset your password.",
           });
         },
-        onError: (ctx: ErrorContext) => {
+        onError: (ctx) => {
           toast.error("Something went wrong", {
             description: ctx.error.message ?? "Something went wrong.",
           });

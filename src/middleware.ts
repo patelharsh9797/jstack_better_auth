@@ -13,13 +13,6 @@ export default async function authMiddleware(request: NextRequest) {
 
   const isAuthRoute = authRoutes.includes(pathName);
   const isPasswordRoute = passwordRoutes.includes(pathName);
-  // const isAdminRoute = adminRoutes.includes(pathName);
-  // const isOnlyProtectedRoutes = onlyProtectedRoutes.includes(pathName);
-  // const isNoAuthRoute = noAuthRoutes.includes(pathName);
-
-  // if (isNoAuthRoute) {
-  //   return NextResponse.next();
-  // }
 
   const { data: session } = await betterFetch<Session>(
     "/api/auth/get-session",
@@ -32,7 +25,7 @@ export default async function authMiddleware(request: NextRequest) {
     },
   );
 
-  if (!session) {
+  if (!session || !session.user) {
     if (isAuthRoute || isPasswordRoute) {
       return NextResponse.next();
     }

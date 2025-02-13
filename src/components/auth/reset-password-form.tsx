@@ -22,7 +22,6 @@ import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { resetPasswordSchema, type ResetPasswordSchemaType } from "@/lib/zod";
 import { authClient } from "@/server/auth/client";
-import { type ErrorContext } from "@better-fetch/fetch";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
@@ -68,7 +67,7 @@ function ResetPasswordFormNoSuspense({
           });
           router.push("/signin");
         },
-        onError: (ctx: ErrorContext) => {
+        onError: (ctx) => {
           toast.error("Something went wrong", {
             description: ctx.error.message ?? "Something went wrong.",
           });

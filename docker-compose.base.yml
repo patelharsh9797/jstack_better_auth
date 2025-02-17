@@ -1,0 +1,45 @@
+
+services:
+  db:
+    container_name: jstack_db
+    image: postgres:17-alpine
+    # restart: always
+    volumes:
+      - postgres_data:/var/lib/postgresql
+    user: "${UID}:${GID}"
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      PGDATA: /var/lib/postgresql/data/pgdata
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - jstack_network
+
+  migration:
+    container_name: jstack_migration
+    build:
+      context: .
+      target: migration
+      dockerfile: Dockerfile
+      args:
+        - DATABASE_URL=${DATABASE_URL}
+    command: sh -c "bun db:push"
+    networks:
+      - jstack_network
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  postgres_data:
+    driver: local
+
+networks:
+  jstack_network:
+    name: jstack_network
+    driver: bridge

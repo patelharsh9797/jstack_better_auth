@@ -1,0 +1,60 @@
+services:
+  db:
+    extends:
+      file: docker-compose.base.yml
+      service: db
+    ports:
+      - "${DB_PORT:-5432}:${DB_PORT:-5432}"
+
+  migration:
+    extends:
+      file: docker-compose.base.yml
+      service: migration
+
+  web:
+    container_name: jstack_app
+    build:
+      context: .
+      target: dev
+      dockerfile: Dockerfile
+    volumes:
+      - .:/app
+      - /app/node_modules
+    ports:
+      - "${WEB_PORT:-3000}:${WEB_PORT:-3000}"
+    environment:
+      - WATCHPACK_POLLING=true
+    env_file:
+      - ./.env
+    develop:
+      watch:
+        - path: package.json
+          action: rebuild
+        - path: next.config.js
+          action: rebuild
+        - path: ./src
+          target: /app/src
+          action: sync
+    depends_on:
+      db:
+        condition: service_healthy
+      migration:
+        condition: service_completed_successfully
+    healthcheck:
+      test:
+        ["CMD-SHELL", "curl -f http://localhost:${WEB_PORT:-3000}/ || exit 1"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - jstack_network
+
+
+volumes:
+  postgres_data:
+    driver: local
+
+networks:
+  jstack_network:
+    name: jstack_network
+    driver: bridge

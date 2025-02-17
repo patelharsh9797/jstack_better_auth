@@ -1,0 +1,56 @@
+services:
+  db:
+    extends:
+      file: docker-compose.base.yml
+      service: db
+    # restart: always
+
+
+  migration:
+    extends:
+      file: docker-compose.base.yml
+      service: migration
+
+  web:
+    container_name: jstack_app_prod
+    build:
+      context: .
+      target: production
+      dockerfile: Dockerfile
+      args:
+        - WEB_PORT=${WEB_PORT}
+        - DATABASE_URL=${DATABASE_URL}
+        - BETTER_AUTH_SECRET=${BETTER_AUTH_SECRET}
+        - BETTER_AUTH_URL=${BETTER_AUTH_URL}
+        - NEXT_PUBLIC_BETTER_AUTH_URL=${NEXT_PUBLIC_BETTER_AUTH_URL}
+        - EMAIL_VERIFICATION_CALLBACK_URL=${EMAIL_VERIFICATION_CALLBACK_URL}
+        - GITHUB_CLIENT_ID=${GITHUB_CLIENT_ID}
+        - GITHUB_CLIENT_SECRET=${GITHUB_CLIENT_SECRET}
+        - BASE_URL=${BASE_URL}
+        - NEXT_PUBLIC_BASE_URL=${NEXT_PUBLIC_BASE_URL}
+        - RESERND_API_KEY=${RESERND_API_KEY}
+        - EMAIL_FROM=${EMAIL_FROM}
+    ports:
+      - "${WEB_PORT:-3000}:${WEB_PORT:-3000}"
+    depends_on:
+      db:
+        condition: service_healthy
+      migration:
+        condition: service_completed_successfully
+    healthcheck:
+      test:
+        ["CMD-SHELL", "curl -f http://localhost:${WEB_PORT:-3000}/ || exit 1"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - jstack_network
+
+volumes:
+  postgres_data:
+    driver: local
+
+networks:
+  jstack_network:
+    name: jstack_network
+    driver: bridge

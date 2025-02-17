@@ -57,7 +57,6 @@ export function SignupForm({
           });
         },
         onError: (ctx) => {
-          console.log("error", ctx);
           toast.error("Something went wrong", {
             description: ctx.error.message,
           });

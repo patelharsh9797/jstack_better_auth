@@ -10,10 +10,12 @@ export const client = createClient<AppRouter>({
 });
 
 function getBaseUrl() {
+  let url: string = "";
   // 👇 Adjust for wherever you deploy
-  if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`;
-  if (process.env.NETLIFY_URL) return `https://${process.env.NETLIFY_URL}`;
+  if (process.env.VERCEL_URL) url = `https://${process.env.VERCEL_URL}`;
+  if (process.env.NETLIFY_URL) url = `https://${process.env.NETLIFY_URL}`;
 
-  const url = `${process.env.NEXT_PUBLIC_BASE_URL ?? "http://localhost:3000"}/api`;
+  url = `${process.env.NEXT_PUBLIC_BASE_URL ?? "http://localhost:3000"}/api`;
+
   return url;
 }

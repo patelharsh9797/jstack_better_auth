@@ -47,6 +47,7 @@ export const RecentPost = () => {
       setName("");
     },
     onError: (error) => {
+      console.log("createPost Error: ", error);
       toast.error(error.message);
     },
   });

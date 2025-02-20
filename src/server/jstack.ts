@@ -21,18 +21,20 @@ const databaseMiddleware = j.middleware(async ({ next }) => {
   return await next({ db });
 });
 
-const auth_databaseMiddleware = j.middleware(async ({ c, next }) => {
+const authMiddleware = j.middleware(async ({ c, next }) => {
+  // const { db } = ctx as InferMiddlewareOutput<typeof databaseMiddleware>;
+
   const session = await auth.api.getSession({
     headers: new Headers(c.req.header()),
   });
 
   if (!session?.user) {
-    throw new HTTPException(401, {
-      message: "Unauthorized, sign in to continue.",
-    });
+    throw new HTTPException(401, { message: "Unauthorized" });
   }
 
-  return await next({ db, user: session.user });
+  return await next({
+    user: session.user,
+  });
 });
 
 /**
@@ -42,4 +44,4 @@ const auth_databaseMiddleware = j.middleware(async ({ c, next }) => {
  */
 export const publicProcedure = j.procedure.use(databaseMiddleware);
 
-export const privateProcedure = j.procedure.use(auth_databaseMiddleware);
+export const privateProcedure = publicProcedure.use(authMiddleware);

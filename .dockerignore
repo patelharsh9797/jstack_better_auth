@@ -28,7 +28,7 @@ env.json
 # Docker-specific files
 Dockerfile
 docker-compose.yml
-
+.next
 .next/
 node_modules/
 

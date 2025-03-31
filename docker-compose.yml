@@ -17,8 +17,22 @@ services:
       context: .
       target: dev
       dockerfile: Dockerfile
+      args:
+        - WEB_PORT=${WEB_PORT}
+        - DATABASE_URL=${DATABASE_URL}
+        - BETTER_AUTH_SECRET=${BETTER_AUTH_SECRET}
+        - BETTER_AUTH_URL=${BETTER_AUTH_URL}
+        - NEXT_PUBLIC_BETTER_AUTH_URL=${NEXT_PUBLIC_BETTER_AUTH_URL}
+        - EMAIL_VERIFICATION_CALLBACK_URL=${EMAIL_VERIFICATION_CALLBACK_URL}
+        - GITHUB_CLIENT_ID=${GITHUB_CLIENT_ID}
+        - GITHUB_CLIENT_SECRET=${GITHUB_CLIENT_SECRET}
+        - BASE_URL=${BASE_URL}
+        - NEXT_PUBLIC_BASE_URL=${NEXT_PUBLIC_BASE_URL}
+        - RESEND_API_KEY=${RESEND_API_KEY}
+        - EMAIL_FROM=${EMAIL_FROM}
     volumes:
       - .:/app
+      - /app/.next
       - /app/node_modules
     ports:
       - "${WEB_PORT:-3000}:${WEB_PORT:-3000}"
@@ -48,7 +62,6 @@ services:
       retries: 5
     networks:
       - jstack_network
-
 
 volumes:
   postgres_data:

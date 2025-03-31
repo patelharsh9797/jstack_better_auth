@@ -13,7 +13,7 @@ export const env = createEnv({
     GITHUB_CLIENT_ID: z.string(),
     GITHUB_CLIENT_SECRET: z.string(),
     EMAIL_VERIFICATION_CALLBACK_URL: z.string().url(),
-    RESERND_API_KEY: z.string(),
+    RESEND_API_KEY: z.string(),
     EMAIL_FROM: z.string(),
     NODE_ENV: z
       .enum(["development", "test", "production"])
@@ -45,7 +45,7 @@ export const env = createEnv({
     EMAIL_VERIFICATION_CALLBACK_URL:
       process.env.EMAIL_VERIFICATION_CALLBACK_URL,
     EMAIL_FROM: process.env.EMAIL_FROM,
-    RESERND_API_KEY: process.env.RESERND_API_KEY,
+    RESEND_API_KEY: process.env.RESEND_API_KEY,
     NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
   },
   /**

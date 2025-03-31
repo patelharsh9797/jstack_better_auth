@@ -1,0 +1,25 @@
+image: node:22.14-slim
+
+stages:
+  - install
+  - typecheck
+  - lint
+
+before_script:
+  - npm install -g pnpm
+
+install_job:
+  stage: install
+  script:
+    - pnpm install
+    - find . -type f -name ".env.example" -exec sh -c 'cp "$1" "${1%.*}"' _ {} \;
+
+typecheck_job:
+  stage: typecheck
+  script:
+    - pnpm typecheck
+
+lint_job:
+  stage: lint
+  script:
+    - pnpm lint

@@ -1,4 +1,3 @@
-
 services:
   db:
     container_name: jstack_db

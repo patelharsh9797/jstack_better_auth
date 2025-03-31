@@ -7,18 +7,27 @@ import {
   sendVerificationEmail,
 } from "@/server/auth/email";
 import { db } from "@/server/db";
+// import { account, session, user, verification } from "@/server/db/schema";
 import { betterAuth, type BetterAuthOptions } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
+import { nextCookies } from "better-auth/next-js";
 import { openAPI } from "better-auth/plugins";
 import { headers } from "next/headers";
 
 export const auth = betterAuth({
   database: drizzleAdapter(db, {
     provider: "pg",
+    // schema: {
+    //   user,
+    //   session,
+    //   account,
+    //   verification,
+    // },
   }),
   trustedOrigins: [env.BETTER_AUTH_URL],
   plugins: [
     openAPI(), // /api/auth/reference
+    nextCookies(),
     // admin({
     //     impersonationSessionDuration: 60 * 60 * 24 * 7, // 7 days
     // }),

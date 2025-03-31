@@ -16,6 +16,7 @@ export const RecentPost = () => {
       const res = await client.post.recent.$get();
       return await res.json();
     },
+    retry: 1,
   });
 
   const {
